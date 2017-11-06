@@ -1,22 +1,116 @@
 <!DOCTYPE html>
-<html>
+<html lang="{$_modx->config.cultureKey}">
 <head>
-{include 'head'}
+  {block 'Head'}
+    <title>{$_modx->resource.pagetitle}</title>
+    <meta charset="{$_modx->config.modx_charset}">  
+    <base href="{$_modx->config.site_url}">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="{$_modx->resource.description}">
+    <meta name="robots" content="{$_pls['seoTab.robotsTag']}">
+    <meta name="keywords" content="{$_pls['seoPro.keywords']}"> 
+
+
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="apple_icon_52.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="apple_icon_72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="apple_icon_114.png">
+
+
+    <link rel="stylesheet" href="{$_modx->config.temlpate_path}css/style.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->  
+
+  {/block}
 </head>
-<body>
-  <div class="container">
-    {include 'header'}
-    {include 'menu'}
-    <section class="row">
-      <article class="col-sm-8">
-        {include 'content'}
-      </article>
-      <aside class="col-sm-4">
-        {include 'aside'}
-      </aside>
-    </section>
-    {include 'footer'}
-  </div>
-  {include 'scripts'}
+<body class="">
+            
+  {block 'Header'}
+    <header>
+      <ul>
+        {'pdoMenu' | snippet :[
+        
+            'level'     =>'2',
+            'parents'   =>'0',
+            'resources' =>'-1,-16,-17,-18,-19,-20',
+            'tplOuter'  =>'@INLINE {$wrapper}',
+            'tpl'       =>'tpl.MenuTop',
+            'tplParentRow' =>'tpl.MenuTopParent',
+            'plPrefix'    =>'',
+            'select'     => 'id,pagetitle,menutitle,parent,isfolder,menuindex', 
+            'includeTVs' => 'nav_label', 
+            
+            '_tpl'=>'0'
+        
+        ]}                         
+      </ul>
+      {'pdoMenu' | snippet :[
+
+          'level'     =>'1',
+          'parents'   =>'0',
+          'resources' =>'16,17,18,19,20',
+          'tplOuter'  =>' @INLINE <ul {$classes}>{$wrapper}</ul>',
+          'tpl'       =>' @INLINE <li {$classes}><a href="{$link}" {$attributes}>{$menutitle}</a>{$wrapper}</li>',
+          'plPrefix'=>'',
+          'select' => 'id,pagetitle,menutitle,parent,isfolder,menuindex', 
+
+      ]}                
+    </header>
+
+  {/block}    
+    
+
+    
+  {block 'Bread'}
+    <div class="bread">
+        {'pdoCrumbs' |snippet :[
+            'showHome'=>'1',
+            'tpl'=>'@INLINE <li><a href="{$link}">{$menutitle}</a></li>',
+            'tplCurrent'=>'@INLINE <li><span>{$menutitle}</span></li>',
+            'tplWrapper'=>'@INLINE <ul>{$output}</ul>',
+            'exclude'=>'25',
+            
+            '_outputSeparator'=>'-',
+        ]}            
+        <a href="" class="return"></a>
+    </div>
+  {/block}   
+
+
+
+  {block 'Content'}
+      
+      {$_modx->resource.content}
+
+  {/block}
+
+
+  {block 'Footer'}
+    <footer>
+      {include 'SocialButton'}
+    </footer>
+  {/block}
+
+  {block 'Script'}
+    <script type="text/javascript" src="{$_modx->config.temlpate_path}js/script.js"></script>
+
+    <script>
+      $(function (){  
+
+      });
+       
+    </script>
+  {/block}
+
+
+  {block 'Debug'}
+        <a href="{$_modx->makeUrl($_modx->resource.id)}&debug=1&cache=1&top=10&add=1">дебаг</a>
+  {/block}
 </body>
 </html>
