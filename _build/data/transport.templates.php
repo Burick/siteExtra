@@ -4,12 +4,26 @@
 
 $templates = array();
 
-$tmp = array(
-    $this->config['PACKAGE_NAME'] => array(
-        'file' => 'sitetemplate',
-        'description' => ''
-    )
-);
+$tmp = [
+/*    'Base' => [
+        'file' => 'Base',
+        'description' => 'Базовый шаблон',
+        'icon' => 'icon-window-maximize',
+
+    ],
+    'Main' => [
+        'file' => 'Main',
+        'description' => 'Базовый шаблон',
+        'icon' => 'icon-home',
+
+    ],
+    'Text' => [
+        'file' => 'Text',
+        'description' => 'Базовый шаблон',
+        'icon' => 'icon-file-word',
+
+    ],    */    
+];
 $setted = false;
 foreach ($tmp as $k => $v) {
     
@@ -19,6 +33,7 @@ foreach ($tmp as $k => $v) {
         'templatename' => $k,
         'category' => 0,
         'description' => @$v['description'],
+        'icon' => @$v['icon'],
         'content' => file_get_contents($this->config['PACKAGE_ROOT'] . 'core/components/'.strtolower($this->config['PACKAGE_NAME']).'/elements/templates/template.' . $v['file'] . '.html'),
         'static' => false,
         //'source' => 1,
