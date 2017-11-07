@@ -52,8 +52,11 @@ $addons = array(
             'controlErrorLog'   => '1.1.2-pl',
             'modDevTools'       => '1.2.1-pl',
             'debugParser'       => '1.1.0-pl',
-            'ChangePack'        => '1.2.0-beta'
+            'ChangePack'        => '1.2.0-beta',
+            'modHelpers'        => '3.0.1-beta',
+
         )),
+
 );
 $builder = new siteBuilder('blank_fenom', '0.0.1', 'beta', $resolvers, $addons);
 $builder->build();
