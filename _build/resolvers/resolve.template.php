@@ -10,6 +10,9 @@ switch ($options[xPDOTransport::PACKAGE_ACTION]) {
     case xPDOTransport::ACTION_INSTALL:
     case xPDOTransport::ACTION_UPGRADE:
         if (isset($options['site_template_name']) && !empty($options['site_template_name'])) {
+
+
+            $options['site_template_name'] = 'Text'; // Устанавливаем текстовый щаблон по умолчанию
             
             $template = $modx->getObject('modTemplate', array('templatename' => $options['site_template_name']));
             
