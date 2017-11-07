@@ -24,7 +24,7 @@ $tmp = [
    'Text' => [
         'file' => 'Text',
         'description' => 'Текстовая',
-        'icon' => 'icon-file-word-o',
+        'icon' => 'icon-file',
 
     ],
    'List' => [
