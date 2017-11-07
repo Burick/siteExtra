@@ -33,11 +33,11 @@ if ($object->xpdo) {
 				$provider->save();
 			}
 
-		    $provider_name = 'extras.melting-media.com';
+		    $provider_name = 'melting-media.com';
 			if (!$provider = $modx->getObject('transport.modTransportProvider', array('service_url:LIKE' => '%' . $provider_name . '%'))) {
 				$provider = $modx->newObject('transport.modTransportProvider', array(
 					'name' => $provider_name,
-					'service_url' => 'http://extras'.$provider_name,
+					'service_url' => 'http://extras.'.$provider_name.'/',
 					'username' => !empty($options['email']) && preg_match('/.+@.+\..+/i', $options['email']) ? trim($options['email']) : '',
 					'api_key' => !empty($options['key']) ? trim($options['key']) : '',
 					'description' => 'Бесплатный репозиторий с компонентами, разработанными в Melting Media ' . $provider_name,
