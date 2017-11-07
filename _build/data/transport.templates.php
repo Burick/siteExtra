@@ -5,7 +5,11 @@
 $templates = array();
 
 $tmp = [
-/*    'Base' => [
+    // $this->config['PACKAGE_NAME'] => [
+    //     'file' => 'Base',
+    //     'description' => 'Тест'
+    // ],
+    'Base' => [
         'file' => 'Base',
         'description' => 'Базовый шаблон',
         'icon' => 'icon-window-maximize',
@@ -13,16 +17,22 @@ $tmp = [
     ],
     'Main' => [
         'file' => 'Main',
-        'description' => 'Базовый шаблон',
+        'description' => 'Главная',
         'icon' => 'icon-home',
 
     ],
-    'Text' => [
+   'Text' => [
         'file' => 'Text',
-        'description' => 'Базовый шаблон',
-        'icon' => 'icon-file-word',
+        'description' => 'Текстовая',
+        'icon' => 'icon-file-word-o',
 
-    ],    */    
+    ],
+   'List' => [
+        'file' => 'List',
+        'description' => 'Список',
+        'icon' => 'icon-list',
+
+    ],            
 ];
 $setted = false;
 foreach ($tmp as $k => $v) {
@@ -34,10 +44,10 @@ foreach ($tmp as $k => $v) {
         'category' => 0,
         'description' => @$v['description'],
         'icon' => @$v['icon'],
-        'content' => file_get_contents($this->config['PACKAGE_ROOT'] . 'core/components/'.strtolower($this->config['PACKAGE_NAME']).'/elements/templates/template.' . $v['file'] . '.html'),
-        'static' => false,
-        //'source' => 1,
-        //'static_file' => 'core/components/'.strtolower($this->config['PACKAGE_NAME']).'/elements/templates/template.' . $v['file'] . '.html',
+        //'content' => file_get_contents($this->config['PACKAGE_ROOT'] . 'core/components/'.strtolower($this->config['PACKAGE_NAME']).'/elements/templates/template.' . $v['file'] . '.html'),
+        'static' => 1,
+        'source' => 1,
+        'static_file' => 'core/components/'.strtolower($this->config['PACKAGE_NAME']).'/elements/templates/template.' . $v['file'] . '.html',
     ), '', true, true);
     $templates[] = $template;
 }
