@@ -34,6 +34,8 @@ switch ($options[xPDOTransport::PACKAGE_ACTION]) {
                 } else {
                     $checked = '';
                 }
+
+                $checked = ''; // !!!Снимаем все отметки
                 $cols[$col][] = '
                     <li style="width: 45%; margin: 2px 5% 0 0; float: left;">
                         <label>
@@ -45,6 +47,7 @@ switch ($options[xPDOTransport::PACKAGE_ACTION]) {
                     $col = 1;
                 }
             }
+
             for ($i = 0; $i <= count($cols[0]); $i++) {
                 $chunks .= $cols[0][$i];
                 if (isset($cols[1][$i])) {
