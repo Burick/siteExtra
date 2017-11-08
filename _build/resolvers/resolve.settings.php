@@ -250,6 +250,21 @@ switch ($options[xPDOTransport::PACKAGE_ACTION]) {
             'key'       => 'cache_prefix',
         ), '', true, true);
         $tmp->save();
+# Добавлено
+        // ACE
+        if (!$tmp = $modx->getObject('modSystemSetting', array('key' => 'ace.theme'))) {
+            $tmp = $modx->newObject('modSystemSetting');
+        }
+        $tmp->fromArray(array(
+            'namespace' => 'ace',
+            'area'      => 'general',
+            'xtype'     => 'textfield',
+            'value'     => 'solarized_dark',
+            'key'       => 'ace.theme',
+        ), '', true, true);
+        $tmp->save();
+
+
 
         break;
 
@@ -258,3 +273,7 @@ switch ($options[xPDOTransport::PACKAGE_ACTION]) {
 }
 
 return true;
+
+
+
+'ace.theme' => 'solarized_dark',
