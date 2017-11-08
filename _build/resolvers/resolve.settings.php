@@ -273,7 +273,3 @@ switch ($options[xPDOTransport::PACKAGE_ACTION]) {
 }
 
 return true;
-
-
-
-'ace.theme' => 'solarized_dark',
