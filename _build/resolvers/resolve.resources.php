@@ -42,18 +42,45 @@ switch ($options[xPDOTransport::PACKAGE_ACTION]) {
             'contentType'  => 'text/plain',
 
             'content' => preg_replace(array('/^\n/', '/[ ]{2,}|[\t]/'), '', "
-                User-agent: *
-                Allow: /
-                
+                User-agent: * 
+                Disallow: /
+                Disallow: /*.php$
+                Disallow: /cgi-bin
+                Disallow: /manager/ 
+                Disallow: /assets/components/ 
+                Disallow: /core/ 
+                Disallow: /connectors/ 
+                Disallow: /index.php 
+                Disallow: *?
+                Allow: /core/cache/phpthumb/*.jpeg
+                Allow: /core/cache/phpthumb/*.png
+                Allow: /core/cache/phpthumb/*.svg  
+
+
                 Host: {\$_modx->config.http_host}
-                
+
                 Sitemap: {\$_modx->config.site_url}sitemap.xml
             ")
         ));
         $resource->save();
 
-
-        
+        //Получаем ID шаблонов
+        $templates = [
+             'Base' => '',
+             'Main' => '',
+             'Text' => '',
+             'List' => '',
+            ];
+        foreach($templates as $name=>$id){
+             if( $template = $modx->getObject('modTemplate', array('templatename' => $name)) ){
+                 $templates[$name]= $template->get('id');
+             }else{
+                 echo 'них нету';
+                 $modx->log(modX::LOG_LEVEL_INFO,'Нет шаблона '.$name); 
+                 flush();
+             }    
+        } 
+        // Получаем ID шаблона по умолчанию
         if (isset($options['site_template_name']) && !empty($options['site_template_name'])) {
             $template = $modx->getObject('modTemplate', array('templatename' => $options['site_template_name']));
         }
@@ -62,6 +89,42 @@ switch ($options[xPDOTransport::PACKAGE_ACTION]) {
         } else {
             $templateId = $modx->getOption('default_template');
         }
+
+
+        // Главная 
+                /* О компании */
+        $alias = 'index';
+        $parent = 0;
+        if ( $resource = $modx->getObject('modResource', array('id' => '1')) ){
+            $resource->fromArray(array(
+                'class_key'   => 'modDocument',
+                'content'     => '
+                    <p>Далеко-далеко за словесными горами в стране, гласных и согласных живут рыбные тексты. Но мир дороге буквенных последний он ты переулка сбить раз, переписывается использовало инициал решила грамматики встретил толку подпоясал грустный до.</p>
+                    <p>Переписали встретил образ оксмокс заглавных щеке над, на берегу злых своих строчка послушавшись домах знаках которое, ipsum коварный свой дал предупредила снова диких заманивший запятой. Первую агенство возвращайся жаренные единственное буквоград.</p>
+                    <p>Парадигматическая, свою безорфографичный она несколько страну за пояс составитель по всей, языкового предупреждал грустный рыбными вопроса, жизни вдали образ мир журчит назад семь своих! Имени рот, взгляд там силуэт рыбными большого.</p>
+                    <p>Ты свое рот путь толку послушавшись? Напоивший о переписывается, рукопись свою. Одна за пустился деревни заголовок это. Строчка маленький текста коварных семь, грамматики, взгляд послушавшись что текстами ты, переписывается заглавных.</p>
+                    <p>Рыбными даль снова заманивший ему предупредила то рукопись большого свою, вопроса живет коварный всеми маленькая, пор даже на берегу последний образ однажды буквоград пустился повстречался. Даль, скатился пояс которое рукопись одна.</p>
+                ',
+                'menuindex'    => 1,
+                'pagetitle'    => 'Главная',
+                'menutitle'    => 'Главная',
+                'isfolder'     => 0,
+                'alias'        => 'index',
+                'uri'          => '/',
+                'uri_override' => 0,
+                'published'    => 1,
+                'publishedon'  => time(),
+                'hidemenu'     => 1,
+                'richtext'     => 1,
+                'parent'       => $parent,
+                'template'     => $templates['Main']
+            ));
+            $resource->save();            
+        }
+ 
+
+
+
 
         /* О компании */
         $alias = 'about';
@@ -88,7 +151,7 @@ switch ($options[xPDOTransport::PACKAGE_ACTION]) {
             'hidemenu'     => 0,
             'richtext'     => 1,
             'parent'       => $parent,
-            'template'     => $templateId
+            'template'     => $templates['Text']
         ));
         $resource->save();
 
