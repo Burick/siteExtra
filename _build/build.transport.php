@@ -10,6 +10,8 @@ $resolvers = array(
     'tvs',
     'resources',
     'settings',
+    'reviews',
+    'faq',
     'set_start_year',
     'fix_translit',
     'manager_customisation'
