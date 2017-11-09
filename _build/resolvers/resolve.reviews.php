@@ -4,7 +4,7 @@
 if (!$modx = $object->xpdo AND !$object->xpdo instanceof modX) {
     return true;
 }
-if( ! $modx->getService('tickets') ){
+if( ! $modx->getService('tickets','Ticket') ){
      $modx->log(modX::LOG_LEVEL_ERROR,'Не удалось создать комменты, Тикетс не установлен!'); //flush(); 
      return true;     
 }
