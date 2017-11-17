@@ -56,6 +56,8 @@ $addons = array(
             'debugParser'       => '1.1.0-pl',
             'ChangePack'        => '1.2.0-beta',
             'modHelpers'        => '3.0.1-beta',
+            'AjaxManager'        => '3.0.1-beta',
+            
 
         )),
 
