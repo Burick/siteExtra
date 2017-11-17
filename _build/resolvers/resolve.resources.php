@@ -91,8 +91,7 @@ switch ($options[xPDOTransport::PACKAGE_ACTION]) {
         }
 
 
-        // Главная 
-                /* О компании */
+        /* Главная */
         $alias = 'index';
         $parent = 0;
         if ( $resource = $modx->getObject('modResource', array('id' => '1')) ){
@@ -105,7 +104,7 @@ switch ($options[xPDOTransport::PACKAGE_ACTION]) {
                     <p>Ты свое рот путь толку послушавшись? Напоивший о переписывается, рукопись свою. Одна за пустился деревни заголовок это. Строчка маленький текста коварных семь, грамматики, взгляд послушавшись что текстами ты, переписывается заглавных.</p>
                     <p>Рыбными даль снова заманивший ему предупредила то рукопись большого свою, вопроса живет коварный всеми маленькая, пор даже на берегу последний образ однажды буквоград пустился повстречался. Даль, скатился пояс которое рукопись одна.</p>
                 ',
-                'menuindex'    => 1,
+                'menuindex'    => 10,
                 'pagetitle'    => 'Главная',
                 'menutitle'    => 'Главная',
                 'isfolder'     => 0,
@@ -139,7 +138,7 @@ switch ($options[xPDOTransport::PACKAGE_ACTION]) {
         }
         $resource->fromArray(array(
             'class_key'    => 'modDocument',
-            'menuindex'    => 1,
+            'menuindex'    => 20,
             'pagetitle'    => 'Информация о нас',
             'menutitle'    => 'О компании',
             'isfolder'     => 1,
@@ -154,214 +153,6 @@ switch ($options[xPDOTransport::PACKAGE_ACTION]) {
             'template'     => $templates['Text']
         ));
         $resource->save();
-
-        /* Специалисты */
-        $alias = 'specialists';
-        $parent = 0;
-        $addspecs = false;
-        if (!$resource = $modx->getObject('modResource', array('alias' => $alias))) {
-            $resource = $modx->newObject('modResource');
-            $addspecs = true;
-        }
-        $resource->fromArray(array(
-            'class_key'    => 'modDocument',
-            'menuindex'    => 2,
-            'pagetitle'    => 'Наши сотрудники',
-            'menutitle'    => 'Специалисты',
-            'isfolder'     => 1,
-            'alias'        => $alias,
-            'uri'          => $alias . '/',
-            'uri_override' => 0,
-            'published'    => 1,
-            'publishedon'  => time(),
-            'hidemenu'     => 0,
-            'richtext'     => 0,
-            'parent'       => $parent,
-            'template'     => $templateId,
-            'content'      => preg_replace(array('/^\n/', '/[ ]{2,}|[\t]/'), '', "
-                <p></p>
-            ")
-        ));
-        $resource->save();
-        $specAlias = $alias;
-        
-        $chunks = array(
-                'aside',
-                'content'
-            );
-        foreach ($chunks as $chunk_name) {
-            if ($chunk = $modx->getObject('modChunk', array('name' => $chunk_name))) {
-                $chunk->set('snippet', str_replace('SITE_SPECS_ID', $resource->id, $chunk->snippet));
-                $chunk->save();
-            }
-        }
-        
-        if ($addspecs) {
-            $resource->setTVValue('show_on_page', 'content||gallery');
-            $specParent = $resource->get('id');
-            $positions = array(
-                'Маркетолог',
-                'Маркетолог',
-                'PR-менеджер',
-                'Директор',
-                'Оператор колл-центра'
-            );
-            for ($i = 1; $i <= 5; $i++) {
-                /* Специалист 1 */
-                $alias = 'spec-' . $i;
-                if (!$resource = $modx->getObject('modResource', array('alias' => $alias))) {
-                    $resource = $modx->newObject('modResource');
-                }
-                $resource->fromArray(array(
-                    'class_key'    => 'modDocument',
-                    'menuindex'    => $i,
-                    'pagetitle'    => 'Сотрудник ' . $i,
-                    'isfolder'     => 0,
-                    'alias'        => $alias,
-                    'uri'          => $specAlias . '/' . $alias . '.html',
-                    'uri_override' => 0,
-                    'published'    => 1,
-                    'publishedon'  => time() - 60 * 60 * $i,
-                    'hidemenu'     => 0,
-                    'richtext'     => 1,
-                    'parent'       => $specParent,
-                    'template'     => $templateId,
-                    'content'      => preg_replace(array('/^\n/', '/[ ]{2,}|[\t]/'), '', "
-                        <p></p>
-                    ")
-                ));
-                $resource->save();
-                $resource->setTVValue('img', $modx->getOption('assets_url') . 'components/' . strtolower($options['site_category']) . '/web/img/spec' . $i . '.png');
-                $resource->setTVValue('subtitle', $positions[$i-1]);
-            }
-        }
-
-        /* Отзывы */
-        $alias = 'reviews';
-        $parent = 0;
-        $addReviews = false;
-        if (!$resource = $modx->getObject('modResource', array('alias' => $alias))) {
-            $resource = $modx->newObject('modResource');
-            $addReviews = true;
-        }
-        if (in_array('Collections', $options['install_addons'])) {
-            $collection_type = 'CollectionContainer';
-        } else {
-            $collection_type = 'modDocument';
-        }
-        $resource->fromArray(array(
-            'class_key'    => $collection_type,
-            'menuindex'    => 3,
-            'pagetitle'    => 'Отзывы наших клиентов',
-            'menutitle'    => 'Отзывы',
-            'isfolder'     => 1,
-            'alias'        => $alias,
-            'uri'          => $alias . '/',
-            'uri_override' => 0,
-            'published'    => 1,
-            'publishedon'  => time(),
-            'hidemenu'     => 0,
-            'richtext'     => 1,
-            'parent'       => $parent,
-            'template'     => $templateId,
-            'content'      => preg_replace(array('/^\n/', '/[ ]{2,}|[\t]/'), '', "
-                <p></p>
-            ")
-        ));
-        $resource->save();
-        $reviewsAlias = $alias;
-        
-        if ($addReviews) {
-            $reviewParent = $resource->get('id');
-            $reviews = array(
-                "<p>Восприятие, на первый взгляд, отражает гендерный стимул. Чем больше люди узнают друг друга, тем больше воспитание иллюстрирует коллективный импульс. Придерживаясь жестких принципов социального Дарвинизма, предсознательное отражает страх, также это подчеркивается в труде Дж.Морено \"Театр Спонтанности\". Ригидность отчуждает групповой эгоцентризм.</p>
-                <p>Рефлексия, как справедливо считает Ф.Энгельс, представляет собой экзистенциальный тест. Идентификация, по определению, отчуждает инсайт. Акцентуированная личность выбирает эмпирический страх. Страх, согласно традиционным представлениям, теоретически возможен.</p>
-                <p>Бессознательное, в представлении Морено, однородно выбирает кризис, это обозначено Ли Россом как фундаментальная ошибка атрибуции, которая прослеживается во многих экспериментах. Действие осознаёт гештальт. Как отмечает Д.Майерс, у нас есть некоторое чувство конфликта, которое возникает с ситуации несоответствия желаемого и действительного, поэтому бессознательное просветляет инсайт. Самоактуализация осознаёт филосовский объект. Гендер, по определению, изящно отталкивает латентный интеллект, в частности, \"психозы\", индуцируемые при различных психопатологических типологиях.</p>",
-                "<p>Самонаблюдение аннигилирует индивидуальный интеллект, следовательно основной закон психофизики: ощущение изменяется пропорционально логарифму раздражителя . Код начинает потребительский импульс, что вызвало развитие функционализма и сравнительно-психологических исследований поведения. Как отмечает Жан Пиаже, субъект традиционен.</p>
-                <p>Сновидение существенно отражает стимул. Роль, иcходя из того, что мгновенно отчуждает индивидуальный аутизм. Установка отталкивает групповой эгоцентризм, таким образом, стратегия поведения, выгодная отдельному человеку, ведет к коллективному проигрышу. Чувство, в представлении Морено, косвенно.</p>
-                <p>Психосоматика выбирает конвергентный филогенез, как и предсказывают практические аспекты использования принципов гештальпсихологии в области восприятия, обучения, развития психики, социальных взаимоотношений. В заключении добавлю, контраст концептуально понимает контраст. Компульсивность, например, притягивает психоз. Самость психологически аннигилирует автоматизм. Психосоматика фундаментально притягивает когнитивный объект. Аномия представляет собой концептуальный гомеостаз.</p>",
-                "<p>Акцентуированная личность интегрирует психоанализ. Чувство, как справедливо считает Ф.Энгельс, важно отталкивает девиантный филогенез. Всякая психическая функция в культурном развитии ребенка появляется на сцену дважды, в двух планах,— сперва социальном, потом — психологическом, следовательно рефлексия вероятна. Установка вызывает позитивистский психоз.</p>
-                <p>Сознание, конечно, начинает институциональный интеракционизм. Онтогенез речи, например, представляет собой конфликтный код. Когнитивная составляющая, в первом приближении, просветляет эгоцентризм. Наши исследования позволяют сделать вывод о том, что гештальт отталкивает ассоцианизм. Психе, в первом приближении, семантически представляет собой коллективный субъект. Л.С.Выготский понимал тот факт, что эскапизм начинает материалистический контраст.</p>
-                <p>Предсознательное иллюстрирует автоматизм, также это подчеркивается в труде Дж.Морено \"Театр Спонтанности\". Стратификация гомогенно отражает архетип, следовательно тенденция к конформизму связана с менее низким интеллектом. Социализация отражает культурный гомеостаз, что вызвало развитие функционализма и сравнительно-психологических исследований поведения. В связи с этим нужно подчеркнуть, что сновидение выбирает социометрический эриксоновский гипноз. Но так как книга Фридмана адресована руководителям и работникам образования, то есть сознание вызывает конформизм. Инсайт интегрирует экспериментальный интеллект.</p>"
-            );
-            for ($i = 1; $i <= 3; $i++) {
-                /* Отзыв 1 */
-                $alias = 'review-' . $i;
-                if (!$resource = $modx->getObject('modResource', array('alias' => $alias))) {
-                    $resource = $modx->newObject('modResource');
-                }
-                $review = $reviews[$i-1] ? $reviews[$i-1] : $review[0];
-                $resource->fromArray(array(
-                    'class_key'    => 'modDocument',
-                    'show_in_tree' => 0,
-                    'menuindex'    => $i,
-                    'pagetitle'    => 'Отзыв ' . $i,
-                    'isfolder'     => 0,
-                    'alias'        => $alias,
-                    'uri'          => $reviewsAlias . '/' . $alias . '.html',
-                    'uri_override' => 0,
-                    'published'    => 1,
-                    'publishedon'  => time() - 60 * 60 * $i,
-                    'hidemenu'     => 0,
-                    'richtext'     => 1,
-                    'parent'       => $reviewParent,
-                    'template'     => $templateId,
-                    'content'      => preg_replace(array('/^\n/', '/[ ]{2,}|[\t]/'), '', $review)
-                ));
-                $resource->save();
-            }
-        }
-
-        /* Галерея */
-        $alias = 'gallery';
-        $parent = 0;
-        $addPhotos = false;
-        if (!$resource = $modx->getObject('modResource', array('alias' => $alias))) {
-            $resource = $modx->newObject('modResource');
-            $addPhotos = true;
-        }
-        $resource->fromArray(array(
-            'class_key'    => 'modDocument',
-            'menuindex'    => 4,
-            'pagetitle'    => 'Галерея',
-            'isfolder'     => 1,
-            'alias'        => $alias,
-            'uri'          => $alias . '/',
-            'uri_override' => 0,
-            'published'    => 1,
-            'publishedon'  => time(),
-            'hidemenu'     => 0,
-            'richtext'     => 1,
-            'parent'       => $parent,
-            'template'     => $templateId,
-            'content'      => preg_replace(array('/^\n/', '/[ ]{2,}|[\t]/'), '', "
-                <p></p>
-            ")
-        ));
-        $resource->save();
-        
-        $chunks = array(
-                'block.gallery'
-            );
-        foreach ($chunks as $chunk_name) {
-            if ($chunk = $modx->getObject('modChunk', array('name' => $chunk_name))) {
-                $chunk->set('snippet', str_replace('SITE_GALLERY_ID', $resource->id, $chunk->snippet));
-                $chunk->save();
-            }
-        }
-        
-        if ($addPhotos && in_array('MIGX', $options['install_addons'])) {
-            $resource->setTVValue('elements', $modx->toJSON(
-                    array(
-                        array('MIGX_id' => 1, 'img' => $modx->getOption('assets_url') . 'components/' . strtolower($options['site_category']) . '/web/img/gal1.jpg', 'title' => 'Фото 1'),
-                        array('MIGX_id' => 2, 'img' => $modx->getOption('assets_url') . 'components/' . strtolower($options['site_category']) . '/web/img/gal2.jpg', 'title' => 'Фото 2'),
-                        array('MIGX_id' => 3, 'img' => $modx->getOption('assets_url') . 'components/' . strtolower($options['site_category']) . '/web/img/gal3.jpg', 'title' => 'Фото 3'),
-                        array('MIGX_id' => 4, 'img' => $modx->getOption('assets_url') . 'components/' . strtolower($options['site_category']) . '/web/img/gal4.jpg', 'title' => 'Фото 4'),
-                        array('MIGX_id' => 5, 'img' => $modx->getOption('assets_url') . 'components/' . strtolower($options['site_category']) . '/web/img/gal5.jpg', 'title' => 'Фото 5'),
-                        array('MIGX_id' => 6, 'img' => $modx->getOption('assets_url') . 'components/' . strtolower($options['site_category']) . '/web/img/gal6.jpg', 'title' => 'Фото 6'),
-                    )
-                ));
-        }
 
         /* Новости */
         $alias = 'news';
@@ -633,3 +424,162 @@ switch ($options[xPDOTransport::PACKAGE_ACTION]) {
 }
 
 return true;
+
+
+
+
+
+
+
+
+        // /* Галерея */
+        // $alias = 'gallery';
+        // $parent = 0;
+        // $addPhotos = false;
+        // if (!$resource = $modx->getObject('modResource', array('alias' => $alias))) {
+        //     $resource = $modx->newObject('modResource');
+        //     $addPhotos = true;
+        // }
+        // $resource->fromArray(array(
+        //     'class_key'    => 'modDocument',
+        //     'menuindex'    => 4,
+        //     'pagetitle'    => 'Галерея',
+        //     'isfolder'     => 1,
+        //     'alias'        => $alias,
+        //     'uri'          => $alias . '/',
+        //     'uri_override' => 0,
+        //     'published'    => 1,
+        //     'publishedon'  => time(),
+        //     'hidemenu'     => 0,
+        //     'richtext'     => 1,
+        //     'parent'       => $parent,
+        //     'template'     => $templateId,
+        //     'content'      => preg_replace(array('/^\n/', '/[ ]{2,}|[\t]/'), '', "
+        //         <p></p>
+        //     ")
+        // ));
+        // $resource->save();
+        
+        // $chunks = array(
+        //         'block.gallery'
+        //     );
+        // foreach ($chunks as $chunk_name) {
+        //     if ($chunk = $modx->getObject('modChunk', array('name' => $chunk_name))) {
+        //         $chunk->set('snippet', str_replace('SITE_GALLERY_ID', $resource->id, $chunk->snippet));
+        //         $chunk->save();
+        //     }
+        // }
+        
+        // if ($addPhotos && in_array('MIGX', $options['install_addons'])) {
+        //     $resource->setTVValue('elements', $modx->toJSON(
+        //             array(
+        //                 array('MIGX_id' => 1, 'img' => $modx->getOption('assets_url') . 'components/' . strtolower($options['site_category']) . '/web/img/gal1.jpg', 'title' => 'Фото 1'),
+        //                 array('MIGX_id' => 2, 'img' => $modx->getOption('assets_url') . 'components/' . strtolower($options['site_category']) . '/web/img/gal2.jpg', 'title' => 'Фото 2'),
+        //                 array('MIGX_id' => 3, 'img' => $modx->getOption('assets_url') . 'components/' . strtolower($options['site_category']) . '/web/img/gal3.jpg', 'title' => 'Фото 3'),
+        //                 array('MIGX_id' => 4, 'img' => $modx->getOption('assets_url') . 'components/' . strtolower($options['site_category']) . '/web/img/gal4.jpg', 'title' => 'Фото 4'),
+        //                 array('MIGX_id' => 5, 'img' => $modx->getOption('assets_url') . 'components/' . strtolower($options['site_category']) . '/web/img/gal5.jpg', 'title' => 'Фото 5'),
+        //                 array('MIGX_id' => 6, 'img' => $modx->getOption('assets_url') . 'components/' . strtolower($options['site_category']) . '/web/img/gal6.jpg', 'title' => 'Фото 6'),
+        //             )
+        //         ));
+        // }
+
+
+
+
+
+
+        // /* Специалисты */
+        // $alias = 'specialists';
+        // $parent = 0;
+        // $addspecs = false;
+        // if (!$resource = $modx->getObject('modResource', array('alias' => $alias))) {
+        //     $resource = $modx->newObject('modResource');
+        //     $addspecs = true;
+        // }
+        // $resource->fromArray(array(
+        //     'class_key'    => 'modDocument',
+        //     'menuindex'    => 30,
+        //     'pagetitle'    => 'Наши сотрудники',
+        //     'menutitle'    => 'Специалисты',
+        //     'isfolder'     => 1,
+        //     'alias'        => $alias,
+        //     'uri'          => $alias . '/',
+        //     'uri_override' => 0,
+        //     'published'    => 1,
+        //     'publishedon'  => time(),
+        //     'hidemenu'     => 0,
+        //     'richtext'     => 0,
+        //     'parent'       => $parent,
+        //     'template'     => $templateId,
+        //     'content'      => preg_replace(array('/^\n/', '/[ ]{2,}|[\t]/'), '', "
+        //         <p>Далеко-далеко за словесными горами в стране, гласных и согласных живут рыбные тексты. Рыбными предложения подпоясал выйти, по всей пояс семь свой несколько первую предупредила пунктуация однажды, гор, возвращайся рот вопрос рыбного там взгляд!</p>
+
+        //         <p>Которой прямо, это залетают предупреждал рот пор маленький продолжил. Подзаголовок продолжил буквоград, себя парадигматическая агенство дорогу образ составитель. Маленький жаренные предупреждал агенство лучше если, имени вскоре приставка свою все текстов?</p>
+
+        //         <p>Последний своих вскоре единственное приставка, себя бросил толку безорфографичный ему деревни текста жаренные на берегу коварный обеспечивает имеет рукопись снова меня? Своего запятой послушавшись, букв рукопись диких текстов несколько если маленький.</p>
+        //     ")
+        // ));
+        // $resource->save();
+        // $specAlias = $alias;
+
+
+        
+        // $chunks = array(
+        //         'aside',
+        //         'content'
+        //     );
+        // foreach ($chunks as $chunk_name) {
+        //     if ($chunk = $modx->getObject('modChunk', array('name' => $chunk_name))) {
+        //         $chunk->set('snippet', str_replace('SITE_SPECS_ID', $resource->id, $chunk->snippet));
+        //         $chunk->save();
+        //     }
+        // }
+ 
+
+
+        // if ($addspecs) {
+        //     $resource->setTVValue('show_on_page', 'content||gallery');
+        //     $specParent = $resource->get('id');
+        //     $positions = array(
+        //         'Маркетолог',
+        //         'Маркетолог',
+        //         'PR-менеджер',
+        //         'Директор',
+        //         'Оператор колл-центра'
+        //     );
+        //     for ($i = 1; $i <= 5; $i++) {
+        //         /* Специалист 1 */
+        //         $alias = 'spec-' . $i;
+        //         if (!$resource = $modx->getObject('modResource', array('alias' => $alias))) {
+        //             $resource = $modx->newObject('modResource');
+        //         }
+        //         $resource->fromArray(array(
+        //             'class_key'    => 'modDocument',
+        //             'menuindex'    => $i,
+        //             'pagetitle'    => 'Сотрудник ' . $i,
+        //             'isfolder'     => 0,
+        //             'alias'        => $alias,
+        //             'uri'          => $specAlias . '/' . $alias . '.html',
+        //             'uri_override' => 0,
+        //             'published'    => 1,
+        //             'publishedon'  => time() - 60 * 60 * $i,
+        //             'hidemenu'     => 0,
+        //             'richtext'     => 1,
+        //             'parent'       => $specParent,
+        //             'template'     => $templateId,
+        //             'content'      => preg_replace(array('/^\n/', '/[ ]{2,}|[\t]/'), '', "
+        //                 <p>Журчит, своих снова свою силуэт ты. Несколько даже повстречался гор его последний своих себя решила осталось ты деревни алфавит маленькая приставка знаках своих эта, города моей языкового щеке власти встретил!</p>
+
+        //                 <p>Деревни рукопись заголовок дорогу злых журчит lorem единственное но за даль ему возвращайся океана продолжил, имени, ты скатился моей? На берегу своего до силуэт проектах вопрос правилами послушавшись продолжил, подпоясал, власти?</p>
+
+        //                 <p>Щеке повстречался грамматики составитель домах строчка, семантика по всей алфавит правилами всемогущая свой большого, встретил себя ipsum взгляд меня буквоград предложения. Даль дал назад взобравшись взгляд курсивных маленький рыбными, не одна?</p>
+
+        //             ")
+        //         ));
+        //         $resource->save();
+        //         $resource->setTVValue('img', $modx->getOption('assets_url') . 'components/' . strtolower($options['site_category']) . '/web/img/spec' . $i . '.png');
+        //         $resource->setTVValue('subtitle', $positions[$i-1]);
+        //     }
+        // }
+
+
